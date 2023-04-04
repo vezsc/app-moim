@@ -132,7 +132,13 @@ input, textarea, button, select {
 	padding: 24px;
 	background-color: white;
 }
-
+.moim-add-reply {
+	width: 960px;
+	margin: auto;
+	margin-top: 12px;
+	padding: 8px;
+	background-color: white;
+}
 .moim-replys {
 	width: 960px;
 	margin: auto;
