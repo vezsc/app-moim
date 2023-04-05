@@ -40,8 +40,8 @@
 		</c:choose>
 
 		<c:set var="joinedCate" value="${fn:join(paramValues.cate, '&') }" />
-		<%-- 메인 / 검색창 및 검색 결과 뷰 --%>
 		<div style="flex: 1; min-width: 95vw; margin-top: 20px" class="block">
+			<%-- 검색창 렌더링 영역 --%>
 			<form class="block-row" style="align-items: center;"
 				action="/moim/search">
 				<div style="flex: 1" class="block-row">
@@ -62,9 +62,11 @@
 					<button style="flex: 1">검색</button>
 				</div>
 			</form>
-			<div style="flex: 1" class="block-row">
+			<%-- 모임 정보 렌더링 영역 --%>
+			<div class="block-row">
 				<c:forEach items="${list }" var="moim">
-					<div class="moim-detail-card block" onclick="location.href='/moim/detail?id=${moim.id}'">
+					<div class="moim-detail-card block"
+						onclick="location.href='/moim/detail?id=${moim.id}'">
 						<div>
 							<span style="color: hotpink">[ ${moim.type eq 'public' ? '공개':'비공개' }
 								/ ${moim.cate }]</span>&nbsp;
@@ -89,12 +91,49 @@
 									pattern="#,###" />
 							</span>
 						</div>
-						<div style="text-align: left">
+						<div style="text-align: left; overflow: hidden">
 							# 소개 : <span>${moim.description }</span>
 						</div>
 					</div>
-
 				</c:forEach>
+			</div>
+			<%-- 페이지 링크 뷰 영역 --%>
+			<div>
+				<c:set var="currentPage" value="${empty param.page ? 1 :param.page }"></c:set>
+				<c:if test="${existPrev }">
+					<c:url value="/moim/search" var="target">
+						<c:forEach items="${paramValues.cate }" var="c">
+							<c:param name="cate" value="${c }" />
+						</c:forEach>
+						<c:param name="page" value="${start-1 }" />
+					</c:url>
+					<a href="${target}">←</a>
+				</c:if>
+				<c:forEach var="p" begin="${start }" end="${last }">
+					<c:url value="/moim/search" var="target">
+						<c:forEach items="${paramValues.cate }" var="c">
+							<c:param name="cate" value="${c }" />
+						</c:forEach>
+						<c:param name="page" value="${p }" />
+					</c:url>
+					<c:choose>
+						<c:when test="${p eq currentPage }">
+							<b style="color: green">${p }</b>
+						</c:when>
+						<c:otherwise>
+							<a href="${target }">${p }</a>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				<c:if test="${existNext }">
+				<c:url value="/moim/search" var="target">
+						<c:forEach items="${paramValues.cate }" var="c">
+							<c:param name="cate" value="${c }" />
+						</c:forEach>
+						<c:param name="page" value="${last+1 }" />
+					</c:url>
+					<a href="${target }">→</a>
+				</c:if>
 			</div>
 		</div>
 	</div>
